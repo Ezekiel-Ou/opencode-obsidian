@@ -126,17 +126,3 @@ opencode serve --port 14096 --hostname 127.0.0.1 --cors app://obsidian.md
 ### 扩展语言支持
 
 添加额外的语言非常简单。可以在 `src/i18n/locale/` 目录下创建新的语言文件，例如 `ja.ts` 用于日语。然后在 `src/i18n/index.ts` 的 `locales` 对象中注册新语言，最后重新编译项目。
-
-## 贡献
-
-欢迎贡献！请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解详细信息。
-
-我们特别欢迎：
-- Windows 和 WSL 支持改进
-- 文档改进
-- Bug 修复
-- 适用于 Obsidian vault 的 Agent Skills 创意
-
-## 许可证
-
-MIT License - 详见 [LICENSE](./LICENSE) 文件
