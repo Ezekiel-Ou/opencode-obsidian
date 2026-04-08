@@ -1,6 +1,6 @@
 # Obsidian OpenCode 插件
 
-[English](./README.md) | 简体中文
+[English](./README.md) | [简体中文](./README.zh-cn.md)
 
 将 [OpenCode](https://opencode.ai) AI 助手直接嵌入 Obsidian，为你的笔记赋予 AI 能力：
 

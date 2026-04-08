@@ -1,5 +1,6 @@
 # OpenCode plugin for Obsidian
 
+[English](./README.md) | [简体中文](./README.zh-cn.md)
 
 Give your notes AI capability by embedding Opencode [OpenCode](https://opencode.ai) AI assistant directly in Obsidian:
 
