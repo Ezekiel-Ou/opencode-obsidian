@@ -3,6 +3,7 @@ import { OPENCODE_VIEW_TYPE } from "../types";
 import { OPENCODE_ICON_NAME } from "../icons";
 import type OpenCodePlugin from "../main";
 import type { ServerState } from "../server/types";
+import { t } from "../i18n";
 
 export class OpenCodeView extends ItemView {
   plugin: OpenCodePlugin;
@@ -20,7 +21,7 @@ export class OpenCodeView extends ItemView {
   }
 
   getDisplayText(): string {
-    return "OpenCode";
+    return t("viewTitle");
   }
 
   getIcon(): string {
@@ -92,14 +93,14 @@ export class OpenCodeView extends ItemView {
     const iconEl = statusContainer.createDiv({ cls: "opencode-status-icon" });
     setIcon(iconEl, "power-off");
 
-    statusContainer.createEl("h3", { text: "OpenCode is stopped" });
+    statusContainer.createEl("h3", { text: t("serverStopped") });
     statusContainer.createEl("p", {
-      text: "Click the button below to start the OpenCode server.",
+      text: t("serverStoppedMessage"),
       cls: "opencode-status-message",
     });
 
     const startButton = statusContainer.createEl("button", {
-      text: "Start OpenCode",
+      text: t("buttonStart"),
       cls: "mod-cta",
     });
     startButton.addEventListener("click", () => {
@@ -117,9 +118,9 @@ export class OpenCodeView extends ItemView {
     const loadingEl = statusContainer.createDiv({ cls: "opencode-loading" });
     loadingEl.createDiv({ cls: "opencode-spinner" });
 
-    statusContainer.createEl("h3", { text: "Starting OpenCode..." });
+    statusContainer.createEl("h3", { text: t("serverStarting") });
     statusContainer.createEl("p", {
-      text: "Please wait while the server starts up.",
+      text: t("serverStartingMessage"),
       cls: "opencode-status-message",
     });
   }
@@ -132,12 +133,12 @@ export class OpenCodeView extends ItemView {
     const titleSection = headerEl.createDiv({ cls: "opencode-header-title" });
     const iconEl = titleSection.createSpan();
     setIcon(iconEl, OPENCODE_ICON_NAME);
-    titleSection.createSpan({ text: "OpenCode" });
+    titleSection.createSpan({ text: t("viewTitle") });
 
     const actionsEl = headerEl.createDiv({ cls: "opencode-header-actions" });
 
     const reloadButton = actionsEl.createEl("button", {
-      attr: { "aria-label": "Reload" },
+      attr: { "aria-label": t("buttonReload") },
     });
     setIcon(reloadButton, "refresh-cw");
     reloadButton.addEventListener("click", () => {
@@ -145,7 +146,7 @@ export class OpenCodeView extends ItemView {
     });
 
     const stopButton = actionsEl.createEl("button", {
-      attr: { "aria-label": "Stop server" },
+      attr: { "aria-label": t("buttonStop") },
     });
     setIcon(stopButton, "square");
     stopButton.addEventListener("click", () => {
@@ -203,7 +204,7 @@ export class OpenCodeView extends ItemView {
     const iconEl = statusContainer.createDiv({ cls: "opencode-status-icon" });
     setIcon(iconEl, "alert-circle");
 
-    statusContainer.createEl("h3", { text: "Failed to start OpenCode" });
+    statusContainer.createEl("h3", { text: t("serverFailed") });
     
     const errorMessage = this.plugin.getLastError();
     if (errorMessage) {
@@ -213,7 +214,7 @@ export class OpenCodeView extends ItemView {
       });
     } else {
       statusContainer.createEl("p", {
-        text: "There was an error starting the OpenCode server.",
+        text: t("serverFailedMessage"),
         cls: "opencode-status-message",
       });
     }
@@ -223,7 +224,7 @@ export class OpenCodeView extends ItemView {
     });
 
     const retryButton = buttonContainer.createEl("button", {
-      text: "Retry",
+      text: t("buttonRetry"),
       cls: "mod-cta",
     });
     retryButton.addEventListener("click", () => {
@@ -231,7 +232,7 @@ export class OpenCodeView extends ItemView {
     });
 
     const settingsButton = buttonContainer.createEl("button", {
-      text: "Open Settings",
+      text: t("buttonOpenSettings"),
     });
     settingsButton.addEventListener("click", () => {
       (this.app as any).setting.open();

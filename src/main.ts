@@ -8,6 +8,7 @@ import { registerOpenCodeIcons, OPENCODE_ICON_NAME } from "./icons";
 import { OpenCodeClient } from "./client/OpenCodeClient";
 import { ContextManager } from "./context/ContextManager";
 import { ExecutableResolver } from "./server/ExecutableResolver";
+import { initI18n, t } from "./i18n";
 
 export default class OpenCodePlugin extends Plugin {
   settings: OpenCodeSettings = DEFAULT_SETTINGS;
@@ -21,6 +22,9 @@ export default class OpenCodePlugin extends Plugin {
 
   async onload(): Promise<void> {
     console.log("Loading OpenCode plugin");
+
+    // 初始化国际化，默认使用中文
+    initI18n();
 
     registerOpenCodeIcons();
 
@@ -95,13 +99,13 @@ export default class OpenCodePlugin extends Plugin {
       () => this.saveSettings()
     ));
 
-    this.addRibbonIcon(OPENCODE_ICON_NAME, "OpenCode", () => {
+    this.addRibbonIcon(OPENCODE_ICON_NAME, t("ribbonTitle"), () => {
       void this.viewManager.activateView();
     });
 
     this.addCommand({
       id: "toggle-opencode-view",
-      name: "Toggle OpenCode panel",
+      name: t("commandToggleView"),
       callback: () => {
         void this.viewManager.toggleView();
       },
@@ -115,7 +119,7 @@ export default class OpenCodePlugin extends Plugin {
 
     this.addCommand({
       id: "start-opencode-server",
-      name: "Start OpenCode server",
+      name: t("commandStartServer"),
       callback: () => {
         this.startServer();
       },
@@ -123,7 +127,7 @@ export default class OpenCodePlugin extends Plugin {
 
     this.addCommand({
       id: "stop-opencode-server",
-      name: "Stop OpenCode server",
+      name: t("commandStopServer"),
       callback: () => {
         this.stopServer();
       },
@@ -176,10 +180,10 @@ export default class OpenCodePlugin extends Plugin {
       console.log("[OpenCode] Autodetected opencode at:", detectedPath);
       this.settings.opencodePath = detectedPath;
       await this.saveData(this.settings);
-      new Notice(`OpenCode executable found at ${detectedPath}`);
+      new Notice(`${t("noticeAutodetectSuccess")} ${detectedPath}`);
     } else {
       console.log("[OpenCode] Could not autodetect opencode executable");
-      new Notice("Could not find opencode. Please check Settings");
+      new Notice(t("noticeAutodetectFail"));
     }
   }
 
@@ -194,13 +198,13 @@ export default class OpenCodePlugin extends Plugin {
   async startServer(): Promise<boolean> {
     const success = await this.processManager.start();
     if (success) {
-      new Notice("OpenCode server started");
+      new Notice(t("commandStartServer"));
     } else {
       const error = this.processManager.getLastError();
       if (error) {
-        new Notice(`OpenCode failed to start: ${error}`, 10000); // Show for 10 seconds
+        new Notice(`${t("serverFailed")}: ${error}`, 10000); // Show for 10 seconds
       } else {
-        new Notice("OpenCode failed to start. Check Settings for details.", 5000);
+        new Notice(t("serverFailedMessage"), 5000);
       }
     }
     return success;
@@ -208,7 +212,7 @@ export default class OpenCodePlugin extends Plugin {
 
   async stopServer(): Promise<void> {
     await this.processManager.stop();
-    new Notice("OpenCode server stopped");
+    new Notice(t("commandStopServer"));
   }
 
   getServerState(): ServerState {

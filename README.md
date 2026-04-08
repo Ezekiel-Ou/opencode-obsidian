@@ -97,3 +97,36 @@ If you see "Executable not found at 'opencode'" despite opencode being installed
 
 This is due to Electron/Obsidian not fully inheriting PATH on Windows.
 
+## Internationalization (i18n) Implementation
+Here is a polished English version of your README section, rewritten without numbered structure and in a natural, professional style:
+
+---
+
+### Internationalization Setup
+
+An internationalization module has been introduced to support multiple languages. The implementation includes a centralized i18n entry file located at `src/i18n/index.ts`, which provides the `t()` translation function and the `initI18n()` initialization logic. Language resources are defined in separate files, including `src/i18n/locale/en.ts` for English and `src/i18n/locale/zh-cn.ts` for Simplified Chinese, which is set as the default language.
+
+### Core File Updates
+
+Several core files have been updated to integrate internationalization. The main entry file `src/main.ts` now initializes the i18n system when the plugin loads, and all commands and notification messages are configured to use localized text. The user interface file `src/ui/OpenCodeView.ts` has been updated so that all UI elements, including buttons and status messages, are rendered in Chinese by default. Similarly, `src/settings/SettingsTab.ts` now localizes all setting titles and descriptions.
+
+### Coverage of Localization
+
+The internationalization system covers all major user-facing content. This includes view titles and button labels, server status messages such as stopped, starting, running, and error states, all configuration options within the settings page, command names, and various notification messages including success, failure, and warning prompts.
+
+### Default Language Behavior
+
+The default language is set to Simplified Chinese (`zh-cn`). The system automatically detects and matches the language setting of Obsidian. If the detected language is not supported, the plugin gracefully falls back to Chinese. Currently, both English and Simplified Chinese are supported.
+
+### Build and Testing
+
+The project compiles successfully and produces a `main.js` bundle of approximately 65KB. No TypeScript type errors were encountered during the build process, and all existing functionalities remain intact.
+
+### Usage
+
+The plugin now displays all interface elements in Chinese by default. This includes all status messages and buttons within the plugin view, all configuration options on the settings page, command names in the command palette, and various notification messages.
+
+### Extending Language Support
+
+Additional languages can be added with minimal effort. A new language file can be created under the `src/i18n/locale/` directory, such as `ja.ts` for Japanese. The new language should then be registered in the `locales` object within `src/i18n/index.ts`, followed by recompilation of the project.
+

@@ -4,6 +4,7 @@ import { homedir } from "os";
 import { OpenCodeSettings, ViewLocation } from "../types";
 import { ServerManager } from "../server/ServerManager";
 import { ExecutableResolver } from "../server/ExecutableResolver";
+import { t } from "../i18n";
 
 function expandTilde(path: string): string {
   if (path === "~") {
@@ -31,12 +32,12 @@ export class OpenCodeSettingTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "OpenCode Settings" });
-    containerEl.createEl("h3", { text: "Server Configuration" });
+    containerEl.createEl("h2", { text: t("settingsTitle") });
+    containerEl.createEl("h3", { text: t("settingsServerConfig") });
 
     new Setting(containerEl)
-      .setName("Port")
-      .setDesc("Port number for the OpenCode web server")
+      .setName(t("settingsPort"))
+      .setDesc(t("settingsPortDesc"))
       .addText((text) =>
         text
           .setPlaceholder("14096")
@@ -51,8 +52,8 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Hostname")
-      .setDesc("Hostname to bind the server to (usually 127.0.0.1)")
+      .setName(t("settingsHostname"))
+      .setDesc(t("settingsHostnameDesc"))
       .addText((text) =>
         text
           .setPlaceholder("127.0.0.1")
@@ -64,8 +65,8 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       );
 
     const customCmdSetting = new Setting(containerEl)
-      .setName("Use custom command")
-      .setDesc("Enable to use a custom shell command instead of the executable path")
+      .setName(t("settingsUseCustomCommand"))
+      .setDesc(t("settingsUseCustomCommandDesc"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.settings.useCustomCommand)
@@ -80,7 +81,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
     const descEl = customCmdSetting.descEl;
     descEl.createEl("br");
     const linkEl = descEl.createEl("a", {
-      text: "Learn more",
+      text: t("settingsLearnMore"),
       href: "https://github.com/mtymek/opencode-obsidian#custom-command-mode"
     });
     linkEl.addEventListener("click", (e) => {
@@ -90,8 +91,8 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     if (this.settings.useCustomCommand) {
       new Setting(containerEl)
-        .setName("Custom command")
-        .setDesc("Custom shell command to start OpenCode.")
+        .setName(t("settingsCustomCommand"))
+        .setDesc(t("settingsCustomCommandDesc"))
         .addTextArea((text) => {
           text
             .setPlaceholder("opencode serve --port 14096 --hostname 127.0.0.1 --cors app://obsidian.md")
@@ -106,7 +107,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
         });
     } else {
       const pathSetting = new Setting(containerEl)
-        .setName("OpenCode executable path")
+        .setName(t("settingsExecutablePath"))
         .addText((text) =>
           text
             .setPlaceholder("opencode")
@@ -119,7 +120,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       
       pathSetting.addButton((button) => {
         button
-          .setButtonText("Autodetect")
+          .setButtonText(t("settingsAutodetect"))
           .onClick(async () => {
             const detectedPath = ExecutableResolver.resolve("opencode");
             if (detectedPath && detectedPath !== "opencode") {
@@ -127,19 +128,17 @@ export class OpenCodeSettingTab extends PluginSettingTab {
               await this.onSettingsChange();
               // Refresh the text input
               this.display();
-              new Notice(`OpenCode executable found at ${detectedPath}`);
+              new Notice(`${t("noticeAutodetectSuccess")} ${detectedPath}`);
             } else {
-              new Notice("Could not find opencode. Please check your installation.");
+              new Notice(t("noticeAutodetectFail"));
             }
           });
       });
     }
 
     new Setting(containerEl)
-      .setName("Project directory")
-      .setDesc(
-        "Override the starting directory for OpenCode. Leave empty to use the vault root."
-      )
+      .setName(t("settingsProjectDir"))
+      .setDesc(t("settingsProjectDirDesc"))
       .addText((text) =>
         text
           .setPlaceholder("/path/to/project or ~/project")
@@ -155,13 +154,11 @@ export class OpenCodeSettingTab extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl("h3", { text: "Behavior" });
+    containerEl.createEl("h3", { text: t("settingsBehavior") });
 
     new Setting(containerEl)
-      .setName("Auto-start server")
-      .setDesc(
-        "Automatically start the OpenCode server when Obsidian opens (not recommended for faster startup)"
-      )
+      .setName(t("settingsAutoStart"))
+      .setDesc(t("settingsAutoStartDesc"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.settings.autoStart)
@@ -172,14 +169,12 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Default view location")
-      .setDesc(
-        "Where to open the OpenCode panel: sidebar opens in the right panel, main opens as a tab in the editor area"
-      )
+      .setName(t("settingsDefaultLocation"))
+      .setDesc(t("settingsDefaultLocationDesc"))
       .addDropdown((dropdown) =>
         dropdown
-          .addOption("sidebar", "Sidebar")
-          .addOption("main", "Main window")
+          .addOption("sidebar", t("settingsLocationSidebar"))
+          .addOption("main", t("settingsLocationMain"))
           .setValue(this.settings.defaultViewLocation)
           .onChange(async (value) => {
             this.settings.defaultViewLocation = value as ViewLocation;
@@ -187,13 +182,11 @@ export class OpenCodeSettingTab extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl("h3", { text: "Workspace Context" });
+    containerEl.createEl("h3", { text: t("settingsWorkspaceContext") });
 
     new Setting(containerEl)
-      .setName("Inject workspace context")
-      .setDesc(
-        "Includes open note paths and selected text in OpenCode when the view is focused"
-      )
+      .setName(t("settingsInjectContext"))
+      .setDesc(t("settingsInjectContextDesc"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.settings.injectWorkspaceContext)
@@ -204,8 +197,8 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Max notes in context")
-      .setDesc("Limit how many open notes are included")
+      .setName(t("settingsMaxNotes"))
+      .setDesc(t("settingsMaxNotesDesc"))
       .addSlider((slider) =>
         slider
           .setLimits(1, 50, 1)
@@ -218,8 +211,8 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Max selection length")
-      .setDesc("Truncate selected text to avoid oversized context")
+      .setName(t("settingsMaxSelection"))
+      .setDesc(t("settingsMaxSelectionDesc"))
       .addSlider((slider) =>
         slider
           .setLimits(500, 5000, 100)
@@ -231,7 +224,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl("h3", { text: "Server Status" });
+    containerEl.createEl("h3", { text: t("settingsServerStatus") });
 
     const statusContainer = containerEl.createDiv({ cls: "opencode-settings-status" });
     this.renderServerStatus(statusContainer);
@@ -249,7 +242,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     // Validate absolute path (supports ~, /, and Windows drive letters)
     if (!trimmed.startsWith("/") && !trimmed.startsWith("~") && !trimmed.match(/^[A-Za-z]:\\/)) {
-      new Notice("Project directory must be an absolute path (or start with ~)");
+      new Notice(t("noticeDirNotAbsolute"));
       return;
     }
 
@@ -257,16 +250,16 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     try {
       if (!existsSync(expanded)) {
-        new Notice("Project directory does not exist");
+        new Notice(t("noticeDirNotExist"));
         return;
       }
       const stat = statSync(expanded);
       if (!stat.isDirectory()) {
-        new Notice("Project directory path is not a directory");
+        new Notice(t("noticeDirNotDirectory"));
         return;
       }
     } catch (error) {
-      new Notice(`Failed to validate path: ${(error as Error).message}`);
+      new Notice(`${t("noticeValidateFailed")} ${(error as Error).message}`);
       return;
     }
 
@@ -279,10 +272,10 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     const state = this.serverManager.getState();
     const statusText = {
-      stopped: "Stopped",
-      starting: "Starting...",
-      running: "Running",
-      error: "Error",
+      stopped: t("settingsStatusStopped"),
+      starting: t("settingsStatusStarting"),
+      running: t("settingsStatusRunning"),
+      error: t("settingsStatusError"),
     };
 
     const statusClass = {
@@ -293,7 +286,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
     };
 
     const statusEl = container.createDiv({ cls: "opencode-status-line" });
-    statusEl.createSpan({ text: "Status: " });
+    statusEl.createSpan({ text: t("settingsStatusLabel") });
     statusEl.createSpan({
       text: statusText[state],
       cls: `opencode-status-badge ${statusClass[state]}`,
@@ -312,7 +305,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     if (state === "running") {
       const urlEl = container.createDiv({ cls: "opencode-status-line" });
-      urlEl.createSpan({ text: "URL: " });
+      urlEl.createSpan({ text: t("settingsUrlLabel") });
       const serverUrl = this.serverManager.getUrl();
       const linkEl = urlEl.createEl("a", {
         text: serverUrl,
@@ -328,7 +321,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     if (state === "stopped" || state === "error") {
       const startButton = buttonContainer.createEl("button", {
-        text: "Start Server",
+        text: t("settingsButtonStartServer"),
         cls: "mod-cta",
       });
       startButton.addEventListener("click", async () => {
@@ -339,7 +332,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     if (state === "running") {
       const stopButton = buttonContainer.createEl("button", {
-        text: "Stop Server",
+        text: t("settingsButtonStopServer"),
       });
       stopButton.addEventListener("click", () => {
         this.serverManager.stop();
@@ -347,7 +340,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
       });
 
       const restartButton = buttonContainer.createEl("button", {
-        text: "Restart Server",
+        text: t("settingsButtonRestartServer"),
         cls: "mod-warning",
       });
       restartButton.addEventListener("click", async () => {
@@ -359,7 +352,7 @@ export class OpenCodeSettingTab extends PluginSettingTab {
 
     if (state === "starting") {
       buttonContainer.createSpan({
-        text: "Please wait...",
+        text: t("settingsButtonWait"),
         cls: "opencode-status-waiting",
       });
     }
